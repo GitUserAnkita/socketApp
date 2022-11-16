@@ -1,7 +1,9 @@
 var express = require('express')
 var app = express()
 var http = require('http').createServer(app);
-const PORT = 8000;
+require('dotenv').config();
+
+const PORT = process.env.PORT || 8000;
 var io = require('socket.io')(http,{
     cors: {
         origin: "http://localhost:3000/",
