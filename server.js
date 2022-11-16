@@ -4,14 +4,7 @@ var http = require('http').createServer(app);
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8000;
-var io = require('socket.io')(http,{
-    cors: {
-        origin: "http://localhost:3000/",
-        methods: ["GET", "POST"],
-        allowedHeaders: ["my-custom-header"],
-        credentials: true
-      }
-});
+
 const cors = require('cors');
 app.use(cors());
 app.use(function (req, res, next) {
