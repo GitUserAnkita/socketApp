@@ -1,24 +1,27 @@
 var express = require('express')
 var app = express()
 var http = require('http').createServer(app);
+const cors = require('cors');
+app.use(cors());
 var io = require('socket.io')(http, {
     cors: {
-      origin: "http://localhost:8080",
-      methods: ["GET", "POST"]
-    }
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+    allowEIO3: true,
+    Credential:true 
     });
 require('dotenv').config();
 
 const PORT = process.env.PORT || 8000;
 
-const cors = require('cors');
-app.use(cors());
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", `*`);
-    res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-JWT-Token");
-    res.header("Access-Control-Allow-Methods", "DELETE, PUT, PATCH, OPTIONS");
-    next();
-});
+
+// app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Origin", `*`);
+//     res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, X-JWT-Token");
+//     res.header("Access-Control-Allow-Methods", "DELETE, PUT, PATCH, OPTIONS");
+//     next();
+// });
 
 var STATIC_CHANNELS = [{
     name: 'testuser 1',
@@ -41,11 +44,9 @@ var STATIC_CHANNELS = [{
     id: 4,
     sockets: []
 }];
-http.listen(PORT, () => {
-    console.log(`listening on *:${PORT}`);
-});
+
 io.on('connection', (socket) => { // socket object may be used to send specific messages to the new connected client
-    console.log('new client connected');
+    console.log('new client connected..............');
     // socket.emit('connection', null);
     // socket.on('channel-join', id => {
     //     console.log('channel join', id);
@@ -80,21 +81,16 @@ io.on('connection', (socket) => { // socket object may be used to send specific 
     //         }
     //     });
     // });
-});
-/**
- * @description This methos retirves the static channels
- */
 
- const getApiAndEmit = socket => {
-    const response = new Date();
-    // Emitting a new message. Will be consumed by the client
-    socket.emit("FromAPI", response);
-  };
+    
+});
+
 app.get('/getChannels', (req, res) => {
     res.json({
         channels: STATIC_CHANNELS
     })
 });
 
-
-
+http.listen(PORT, () => {
+    console.log(`listening on *:${PORT}`);
+});
